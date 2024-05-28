@@ -18,8 +18,9 @@ import vuetify from "./vuetify";
 const app = createApp({}).use(vuetify);
 
 import HireComponent from './components/HireComponent.vue';
+import UsersTableComponent from './components/UsersTableComponent.vue';
 app.component('hire-component', HireComponent);
-
+app.component('users-table-component', UsersTableComponent);
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
