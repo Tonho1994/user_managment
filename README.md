@@ -37,7 +37,7 @@ The following technologies are used for the correct operation of the project
 
 Clone the repository
 ```bash
-  git clone
+  git clone git@github.com:Tonho1994/user_managment.git
 ```
 Change to the Project directory
 ```bash
@@ -58,6 +58,10 @@ Create your mysql or mariadb database and fill in the data in the .env
 Run migrations and seeders to populate the database.
 ```bash
   php artisan migrate:fresh --seed
+```
+Link the storage folder.
+```bash
+  php artisan storage:link
 ```
 Test the application by running the following command
 ```bash

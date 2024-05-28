@@ -6,6 +6,8 @@
 
 import './bootstrap';
 import { createApp } from 'vue';
+//Export vuetify theme file
+import vuetify from "./vuetify";
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
@@ -13,10 +15,10 @@ import { createApp } from 'vue';
  * to use in your application's views. An example is included for you.
  */
 
-const app = createApp({});
+const app = createApp({}).use(vuetify);
 
-import ExampleComponent from './components/ExampleComponent.vue';
-app.component('example-component', ExampleComponent);
+import HireComponent from './components/HireComponent.vue';
+app.component('hire-component', HireComponent);
 
 /**
  * The following block of code may be used to automatically register your

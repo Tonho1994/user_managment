@@ -21,3 +21,11 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//CV file
+Route::get('/cv', function () {
+    $headers = [
+        'Content-Type' => 'application/pdf',
+    ];
+    $file_path = public_path('storage/CV_AMZ.pdf');
+    return response()->download($file_path, 'cv_amz.pdf', $headers);
+})->name('cv');
