@@ -4,13 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Usuarios') }}</div>
-
-                <div class="card-body">
-                    <users-table-component></users-table-component>
-                </div>
-            </div>
+            <users-table-component></users-table-component>
         </div>
     </div>
 </div>
