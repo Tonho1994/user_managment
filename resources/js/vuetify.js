@@ -8,6 +8,8 @@ const customeTheme = {
     dark: false,
     colors: {
         primary: "#0d6efd",
+        red: "#ba2d42",
+        darkblueshade: "#308DC2"
         /* secondary: "#424242",
         accent: "#82B1FF",
         error: "#FF5252",
@@ -23,8 +25,6 @@ const customeTheme = {
         gray: "#909090",
         neutralgray: "#9BA6C1",
         green: "#2ED47A",
-        red: "#FF5c4E",
-        darkblueshade: "#308DC2",
         lightgray: "#BDBDBD",
         lightpink: "#FFCFE3",
         white: "#FFFFFF",

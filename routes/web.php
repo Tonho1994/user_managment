@@ -25,7 +25,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 //Users actions Routes
 Route::prefix('users')->middleware(['can:cat_users'])->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('users.index');
-    Route::get('/all', [UserController::class, 'getUsers'])->name('users.get');
+    //Route::get('/all', [UserController::class, 'getUsers'])->name('users.get');
 });
 //CV file
 Route::get('/cv', function () {

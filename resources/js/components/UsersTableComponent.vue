@@ -10,39 +10,51 @@
 
     <v-card-text class="bg-surface-light pt-4">
       <v-data-table-server
-      v-model:items-per-page="itemsPerPage"
       :headers="headers"
-      :items="serverItems"
-      :items-length="totalItems"
-      :loading="loading"
       :search="search"
-      item-key="name"
+      :items="serverItems"
+      :loading="loading"
+      :items-length="totalItems"
+      v-model:items-per-page="itemsPerPage"
+
       @update:options="loadItems"
-    ></v-data-table-server>
+    >
+    <template v-slot:item.acciones="{ value }">
+      <div class="row">
+        <div class="col-lg-6">
+          <v-btn :href="value" color="darkblueshade" size="small" icon="bi bi-pencil-square"></v-btn>
+        </div>
+        <div class="col-lg-6 pt-md-0 pt-1">
+          <v-btn :href="value" color="red" size="small" icon="bi bi-trash3"></v-btn>
+        </div>
+      </div>
+    </template>
+    </v-data-table-server>
     </v-card-text>
   </v-card>
   </template>
   <script>
     export default {
       data: () => ({
-        itemsPerPage: 5,
         headers: [
-
-          { title: 'Id', key: 'id', align: 'end' },
-          { title: 'Nombre', key: 'name', align: 'center' },
-          { title: 'Email', key: 'email', align: 'center' },
+          { title: 'Id', key: 'id'},
+          { title: 'Nombre', key: 'name'},
+          { title: 'Email', key: 'email'},
+          { title: 'Acciones', key: 'acciones', align: 'center', value: serverItems => `${serverItems.id}` },
         ],
         search: '',
         serverItems: [],
         loading: true,
-        totalItems: 0,
+        totalItems: 10,
+        itemsPerPage: 5,
+
       }),
       methods: {
         loadItems ({ page, itemsPerPage, sortBy }) {
           this.loading = true
           axios.get('/api/users/all').then(({ data }) => {
 
-            this.itemsPerPage = itemsPerPage
+            this.itemsPerPage = data.itemsPerPage
             this.serverItems = data.data
             this.totalItems = data.total
             this.loading = false
