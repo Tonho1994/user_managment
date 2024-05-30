@@ -6,8 +6,11 @@
 
 import './bootstrap';
 import { createApp } from 'vue';
-//Export vuetify theme file
+//import vuetify theme file
 import vuetify from "./vuetify";
+//import sweetalert
+import swal from 'sweetalert2';
+window.Swal = swal;
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
@@ -19,8 +22,11 @@ const app = createApp({}).use(vuetify);
 
 import HireComponent from './components/HireComponent.vue';
 import UsersTableComponent from './components/UsersTableComponent.vue';
+import UsersEditComponent from './components/UsersEditComponent.vue';
 app.component('hire-component', HireComponent);
 app.component('users-table-component', UsersTableComponent);
+app.component('users-edit-component', UsersEditComponent);
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <users-table-component user-route="{{ route('users.index') }}"></users-table-component>
+            <users-edit-component :user='@json($user)' user-route="{{ route('users.index') }}"></users-edit-component>
         </div>
     </div>
 </div>

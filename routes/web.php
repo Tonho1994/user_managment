@@ -23,8 +23,9 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 //Users actions Routes
-Route::prefix('users')->middleware(['can:cat_users'])->group(function () {
+Route::prefix('users')->middleware(['auth','can:cat_users'])->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('users.index');
+    Route::get('/{user}', [UserController::class, 'show'])->middleware(['can:update_user'])->name('users.show');
     //Route::get('/all', [UserController::class, 'getUsers'])->name('users.get');
 });
 //CV file

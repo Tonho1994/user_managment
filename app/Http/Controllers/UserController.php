@@ -35,9 +35,10 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $user)
     {
         //
+        return view('users.show',compact('user'));
     }
 
     /**
@@ -64,7 +65,7 @@ class UserController extends Controller
         //
     }
     /**
-     * Remove the specified resource from storage.
+     * Gets the tada of all users
      */
     public function getUsers(Request $request)
     {
@@ -76,7 +77,7 @@ class UserController extends Controller
             $direction = $request->input('order', 'asc');
             $query->orderBy($sort, $direction);
         }
-        $users = $query->paginate($request->input('itemsPerPage', 10));
+        $users = $query->paginate($request->input('itemsPerPage', 15));
         return response()->json($users);
     }
 }
