@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UserUpdateRequest;
@@ -40,7 +41,12 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('users.show',compact('user'));
+        $roles = Role::all()->pluck('name');
+
+        foreach ($user->getRoleNames() as $role) {
+            $user->role = $role;
+        }
+        return view('users.show',compact('user','roles'));
     }
 
     /**

@@ -23,6 +23,28 @@
               Please provide a valid email.
             </div>
           </div>
+          <div class="row g-3 align-items-center mb-5">
+            <div class="col-md-6">
+              <label for="phone" class="form-label">Phone</label>
+              <input type="text" class="form-control"  id="phone" v-model="formData.phone" placeholder="Phone" maxlength="40">
+              <div class="invalid-feedback">
+                Please enter a valid Phone Number.
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for="role" class="form-label">Role</label>
+              <select v-model="formData.role" class="form-select" id="role" aria-label="roles selection" required>
+                <option value="">Select...</option>
+                <option v-for="role in roles" v-bind:value="role">
+                  {{ role }}
+                </option>
+
+              </select>
+              <div class="invalid-feedback">
+                Please select a Role
+              </div>
+            </div>
+          </div>
           <div class="row g-3 align-items-center">
             <div class="col-md-2">
               <label for="password" class="col-form-label">Password</label>
@@ -51,6 +73,7 @@
     export default {
       props: {
         user: { type: Object, required: true },
+        roles: { type: Object, required: true },
         userEditRoute: { type: String, required: true }
       },
       data ()  {
@@ -58,6 +81,8 @@
           formData: {
             name: this.user.name,
             email: this.user.email,
+            phone: this.user.phone,
+            role: this.user.role,
             password: ''
           }
         }

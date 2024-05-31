@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
         $admin=User::create([
             'name' => 'admin',
             'email' => 'admin@mail.com',
+            'phone' => '+525544159052',
             'email_verified_at' => now(),
             'password' => Hash::make('password123!'),
             'remember_token' => Str::random(10),
@@ -26,6 +27,7 @@ class UserSeeder extends Seeder
         $admin=User::create([
             'name' => 'user',
             'email' => 'user@mail.com',
+            'phone' => '+525543459662',
             'email_verified_at' => now(),
             'password' => Hash::make('password123!'),
             'remember_token' => Str::random(10),
