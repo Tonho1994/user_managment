@@ -25,14 +25,15 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 //Users actions Routes
 Route::prefix('users')->middleware(['auth','can:cat_users'])->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('users.index');
-    Route::get('/{user}', [UserController::class, 'show'])->middleware(['can:update_user'])->name('users.show');
-    //Route::get('/all', [UserController::class, 'getUsers'])->name('users.get');
+    Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
+    Route::post('/{user}', [UserController::class, 'update'])->middleware(['can:update_user'])->name('users.update');
+    Route::delete('/{user}', [UserController::class, 'destroy'])->middleware(['can:delete_user'])->name('users.delete');
 });
 //CV file
 Route::get('/cv', function () {
     $headers = [
         'Content-Type' => 'application/pdf',
     ];
-    $file_path = public_path('storage/CV_AMZ.pdf');
+    $file_path = public_path('CV_AMZ.pdf');
     return response()->download($file_path, 'cv_amz.pdf', $headers);
 })->name('cv');

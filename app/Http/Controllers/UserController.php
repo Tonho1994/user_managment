@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\UserUpdateRequest;
 
 class UserController extends Controller
 {
@@ -37,7 +40,6 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
         return view('users.show',compact('user'));
     }
 
@@ -52,17 +54,43 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UserUpdateRequest $request,User $user)
     {
         //
+        try {
+            $validated = $request->validated();
+            $user->name=$validated['name'];
+            $user->email=$validated['email'];
+            $user->password=Hash::make($validated['password']);
+            $user->save();
+            return response()->json([
+                'message'	=> 'User updated',
+            ],200);
+        } catch (\Throwable $th) {
+            Log::warning(__METHOD__."--->Line:".$th->getLine()."----->".$th->getMessage());
+            return response()->json([
+                'message'	=> 'UC-01',
+            ],500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
         //
+        try {
+            $user->delete();
+            return response()->json([
+                'message'	=> 'User deleted',
+            ],200);
+        } catch (\Throwable $th) {
+            Log::warning(__METHOD__."--->Line:".$th->getLine()."----->".$th->getMessage());
+            return response()->json([
+                'message'	=> 'UC-02',
+            ],500);
+        }
     }
     /**
      * Gets the tada of all users

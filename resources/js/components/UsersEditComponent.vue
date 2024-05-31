@@ -4,55 +4,61 @@
       class="mx-auto"
       prepend-icon="bi bi-person"
     >
-    <template v-slot:title>
-      <span class="font-weight-black">Edit User </span>{{user.name}}
-    </template>
+      <template v-slot:title>
+        <span class="font-weight-black">Edit User </span>| {{user.name}}
+      </template>
+      <v-card-text class="bg-surface-light pt-4">
+        <v-form class="needs-validation" @submit.prevent="submitForm($event)" novalidate>
+          <div class="mb-3">
+              <label for="name" class="form-label">Name</label>
+              <input type="text" class="form-control"  id="name" v-model="formData.name" placeholder="Name" maxlength="40" required>
+              <div class="invalid-feedback">
+                Please enter a username.
+              </div>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="email" v-model="formData.email" maxlength="150" placeholder="name@example.com" required>
+            <div class="invalid-feedback">
+              Please provide a valid email.
+            </div>
+          </div>
+          <div class="row g-3 align-items-center">
+            <div class="col-md-2">
+              <label for="password" class="col-form-label">Password</label>
+            </div>
+            <div class="col-md-4">
+              <input type="password" pattern="/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*_)(?!.*\W)(?!.* ).{8,16}$/" id="password" v-model="formData.password" class="form-control" aria-describedby="passwordHelpInline">
+              <div class="invalid-feedback">
+                Please enter a valid Password.
+              </div>
+            </div>
+            <div class="col-md-6">
+              <span id="passwordHelpInline" class="form-text">
+                Password must contain one digit from 1 to 9, one lowercase letter, one uppercase letter, one underscore, no space and it must be 8-16 characters long.
+              </span>
+            </div>
+            <div class="col-12">
+              <v-btn  color="secondary" type="submit" rounded="lg" prepend-icon="bi bi-floppy">Update</v-btn>
+            </div>
 
-    <v-card-text class="bg-surface-light pt-4">
-      <v-form class="needs-validation" @submit.prevent="submitForm($event)" novalidate>
-        <div class="mb-3">
-          <label for="name" class="form-label">Name</label>
-          <input type="text" class="form-control" id="name" v-model="user.name" placeholder="Name" maxlength="20" required>
-          <div class="invalid-feedback">
-            Please enter a username.
           </div>
-        </div>
-        <div class="mb-3">
-          <label for="email" class="form-label">Email address</label>
-          <input type="email" class="form-control" id="email" v-model="user.email" placeholder="name@example.com" required>
-          <div class="invalid-feedback">
-            Please provide a valid email.
-          </div>
-        </div>
-        <div class="row g-3 align-items-center">
-          <div class="col-auto">
-            <label for="password" class="col-form-label">Password</label>
-          </div>
-          <div class="col-auto">
-            <input type="password" id="password" class="form-control" aria-describedby="passwordHelpInline">
-          </div>
-          <div class="col-auto">
-            <!-- <span id="passwordHelpInline" class="form-text">
-              Must be 8-20 characters long.
-            </span> -->
-          </div>
-          <div class="col-12">
-            <v-btn  color="secondary" type="submit" rounded="lg" prepend-icon="bi bi-floppy">Update</v-btn>
-          </div>
-        </div>
-      </v-form>
-    </v-card-text>
-  </v-card>
+        </v-form>
+      </v-card-text>
+    </v-card>
   </template>
   <script>
     export default {
       props: {
         user: { type: Object, required: true },
-        userRoute: { type: String, required: true }
+        userEditRoute: { type: String, required: true }
       },
       data ()  {
         return {
           formData: {
+            name: this.user.name,
+            email: this.user.email,
+            password: ''
           }
         }
       },
@@ -63,36 +69,39 @@
             event.stopPropagation()
           }
           else{
-            this.formData = new FormData(event.target);
-            axios({
-                method: 'post',
-                url: this.userRoute,
-                data: this.formData,
-                headers: { "Content-Type": "multipart/form-data" },
+            axios.post(this.userEditRoute,this.formData,{
+              headers:{
+                'Content-Type': 'multipart/form-data'
+              }
             })
             .then(function (success) {//exito recarga todo
                 Swal.fire({
-                    title: '¡Éxito!',
+                    title: 'Success!',
                     text: success.data.message,
                     icon: 'success',
                     confirmButtonText: 'OK',
                     buttonsStyling:false,
-                    timer: 2000,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
                     customClass: {
-                        confirmButton: 'btn btn-primary',
+                        confirmButton: 'btn btn-primary text-white',
                     }
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    location. reload()
+                  }
                 })
             })
             .catch(function (error) {
-                if (error.response.status == 419) {//Se acabo el token de sesion
+                if (error.response.status == 419) {//Session token expired
                   Swal.fire({
-                      title: 'Tiempo Agotado',
-                      text: '¡Recarga la página!',
+                      title: 'Exhausted Time',
+                      text: '¡Reload the page!',
                       icon: 'warning',
                       confirmButtonText: '<i class="bi bi-arrow-clockwise text-white"></i>',
                       buttonsStyling:false,
                       customClass: {
-                          confirmButton: 'btn btn-primary',
+                          confirmButton: 'btn btn-primary text-white',
                       }
                   }).then((result) => {
                     if (result.isConfirmed) {
@@ -100,29 +109,28 @@
                     }
                   })
                 }
-                else if(error.response.status == 422){//hubo unerro de validacion de laravel
+                else if(error.response.status == 422){//laravel validation error
                   Swal.fire({
-                    title: '¡Algo Falta!',
+                    title: "Something's missing!",
                     text: error.response.data.message,
                     icon: 'info',
-                    confirmButtonText: 'Revisar',
+                    confirmButtonText: 'check',
                     buttonsStyling:false,
                     customClass: {
                       icon: '...',
-                      confirmButton: 'btn btn-primary',
+                      confirmButton: 'btn btn-secondary text-white',
                     }
                   })
                 }
-                else {//algun otro error
-                  console.log(error.response.data.message);
+                else {//another error
                   Swal.fire({
                     title: 'Upss...',
-                    text: error.response.data.message,
+                    text: error,
                     icon: 'error',
-                    confirmButtonText: 'Cerrar',
+                    confirmButtonText: 'Close',
                     buttonsStyling:false,
                     customClass: {
-                      confirmButton: 'btn btn-primary',
+                      confirmButton: 'btn btn-danger text-white',
                     }
                   })
                 }

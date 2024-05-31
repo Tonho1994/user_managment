@@ -20,5 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('users')/* ->middleware(['can:cat_users']) */->group(function () {
-    Route::get('/all', [UserController::class, 'getUsers']);
+    Route::get('/all', [UserController::class, 'getUsers'])->name('api.users.get');;
 });
