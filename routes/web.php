@@ -25,6 +25,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 //Users actions Routes
 Route::prefix('users')->middleware(['auth','can:cat_users'])->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('users.index');
+    Route::post('/create', [UserController::class, 'create'])->middleware(['can:create_user'])->name('users.create');
     Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
     Route::post('/{user}', [UserController::class, 'update'])->middleware(['can:update_user'])->name('users.update');
     Route::delete('/{user}', [UserController::class, 'destroy'])->middleware(['can:delete_user'])->name('users.delete');

@@ -7,56 +7,60 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Users datatables
      */
     public function index()
     {
         //
-        return view('users.index');
+        $roles = Role::all()->pluck('name');
+        return view('users.index',compact('roles'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Create new user
      */
-    public function create()
+    public function create(UserCreateRequest $request)
     {
         //
+        try {
+            $validated = $request->validated();
+            $user = User::create([
+                'name'	=> $validated['name'],
+                'email'	=> $validated['email'],
+                'phone'	=> $validated['phone'],
+                'password'	=> Hash::make($validated['password']),
+                'email_verified_at' => now(),
+                'remember_token' => Str::random(10),
+            ]);
+            $user->assignRole($validated['role']);
+            return response()->json([
+                'message'	=> 'User created',
+            ],200);
+        } catch (\Throwable $th) {
+            Log::warning(__METHOD__."--->Line:".$th->getLine()."----->".$th->getMessage());
+            return response()->json([
+                'message'	=> 'UC-03',
+            ],500);
+        }
     }
-
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
+     * Show card from to edit user
      */
     public function show(User $user)
     {
         $roles = Role::all()->pluck('name');
-
         foreach ($user->getRoleNames() as $role) {
             $user->role = $role;
         }
         return view('users.show',compact('user','roles'));
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      */
@@ -67,7 +71,11 @@ class UserController extends Controller
             $validated = $request->validated();
             $user->name=$validated['name'];
             $user->email=$validated['email'];
-            $user->password=Hash::make($validated['password']);
+            $user->phone=$validated['phone'];
+            if(isset($validated['password'])){
+                $user->password=Hash::make($validated['password']);
+            }
+            $user->syncRoles([$validated['role']]);
             $user->save();
             return response()->json([
                 'message'	=> 'User updated',

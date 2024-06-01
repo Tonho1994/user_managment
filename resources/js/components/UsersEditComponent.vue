@@ -10,14 +10,14 @@
       <v-card-text class="bg-surface-light pt-4">
         <v-form class="needs-validation" @submit.prevent="submitForm($event)" novalidate>
           <div class="mb-3">
-              <label for="name" class="form-label">Name</label>
+              <label for="name" class="form-label">Name*</label>
               <input type="text" class="form-control"  id="name" v-model="formData.name" placeholder="Name" maxlength="40" required>
               <div class="invalid-feedback">
                 Please enter a username.
               </div>
           </div>
           <div class="mb-3">
-            <label for="email" class="form-label">Email address</label>
+            <label for="email" class="form-label">Email address*</label>
             <input type="email" class="form-control" id="email" v-model="formData.email" maxlength="150" placeholder="name@example.com" required>
             <div class="invalid-feedback">
               Please provide a valid email.
@@ -32,13 +32,12 @@
               </div>
             </div>
             <div class="col-md-6">
-              <label for="role" class="form-label">Role</label>
+              <label for="role" class="form-label">Role*</label>
               <select v-model="formData.role" class="form-select" id="role" aria-label="roles selection" required>
                 <option value="">Select...</option>
                 <option v-for="role in roles" v-bind:value="role">
                   {{ role }}
                 </option>
-
               </select>
               <div class="invalid-feedback">
                 Please select a Role
@@ -50,20 +49,19 @@
               <label for="password" class="col-form-label">Password</label>
             </div>
             <div class="col-md-4">
-              <input type="password" pattern="/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*_)(?!.*\W)(?!.* ).{8,16}$/" id="password" v-model="formData.password" class="form-control" aria-describedby="passwordHelpInline">
+              <input type="password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$" id="password" v-model="formData.password" class="form-control" aria-describedby="passwordHelpInline">
               <div class="invalid-feedback">
                 Please enter a valid Password.
               </div>
             </div>
             <div class="col-md-6">
               <span id="passwordHelpInline" class="form-text">
-                Password must contain one digit from 1 to 9, one lowercase letter, one uppercase letter, one underscore, no space and it must be 8-16 characters long.
+                Password must contain at least 8 characters, one lowercase letter, one uppercase letter, one number and can contain special characters.
               </span>
             </div>
-            <div class="col-12">
+            <div class="col-12 d-flex justify-content-end">
               <v-btn  color="secondary" type="submit" rounded="lg" prepend-icon="bi bi-floppy">Update</v-btn>
             </div>
-
           </div>
         </v-form>
       </v-card-text>
@@ -150,7 +148,7 @@
                 else {//another error
                   Swal.fire({
                     title: 'Upss...',
-                    text: error,
+                    text: 'Save this code! '+error.response.data.message,
                     icon: 'error',
                     confirmButtonText: 'Close',
                     buttonsStyling:false,
