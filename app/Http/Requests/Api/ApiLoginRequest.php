@@ -1,17 +1,13 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
-class UserCreateRequest extends FormRequest
+class ApiLoginRequest extends FormRequest
 {
-    /**
-     * Indicates if the validator should stop on the first rule failure.
-     *
-     * @var bool
-     */
-    protected $stopOnFirstFailure = true;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -29,11 +25,8 @@ class UserCreateRequest extends FormRequest
     {
         return [
             //
-            'name' => ['required', 'max:40'],
             'email' => ['required', 'email', 'max:150'],
             'password' => ['required', 'regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/','max:150'],
-            'phone' => ['nullable', 'max:40'],
-            'role' => ['required', 'exists:roles,name'],
         ];
     }
     /**
@@ -44,17 +37,22 @@ class UserCreateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'A name is required',
-            'name.max' => 'Maximum 40 caracters',
+
             'email.required' => 'An email is required',
             'email.email' => 'Must be like example@domain.com',
             'email.max' => 'Maximum 150 caracters',
             'password.required' => 'A password is required',
-            'password.not_regex' => 'Incorrect Format',
+            'password.not_regex' => 'Password must contain at least 8 characters, one lowercase letter, one uppercase letter, one number and can contain special characters.',
             'password.max' => 'Maximum 150 caracters',
-            'phone.max' => 'Maximum 40 caracters',
-            'role.required' => 'A role is required',
-            'role.exists' => 'Invalid Role',
         ];
     }
+    public function failedValidation(Validator $validator)
+    {
+    throw new HttpResponseException(response()->json([
+        'success'   => false,
+        'message'   => 'Validation errors',
+        'data'      => $validator->errors()
+    ]));
+    }
+
 }
